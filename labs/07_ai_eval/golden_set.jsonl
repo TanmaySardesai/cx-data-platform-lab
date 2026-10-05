@@ -1,0 +1,20 @@
+{"id": "q01", "question": "I can't log in to my account", "expected_article": "kb_login", "must_include": ["Forgot password"], "should_escalate": false}
+{"id": "q02", "question": "My account is locked after too many password attempts", "expected_article": "kb_login", "must_include": ["30 minutes"], "should_escalate": false}
+{"id": "q03", "question": "My card was charged twice for the same order", "expected_article": "kb_double_charge", "must_include": ["3 working days"], "should_escalate": false}
+{"id": "q04", "question": "I see a duplicate charge on my statement", "expected_article": "kb_double_charge", "must_include": ["dispute"], "should_escalate": false}
+{"id": "q05", "question": "I lost my card at the station", "expected_article": "kb_card_block", "must_include": ["Block card"], "should_escalate": false}
+{"id": "q06", "question": "How do I freeze my debit card?", "expected_article": "kb_card_block", "must_include": ["Block card"], "should_escalate": false}
+{"id": "q07", "question": "There is a transaction I didn't make this transaction, I think it's fraud", "expected_article": "kb_fraud", "must_include": ["fraud"], "should_escalate": true}
+{"id": "q08", "question": "Someone hacked my account and moved money", "expected_article": "kb_fraud", "must_include": ["24 hours"], "should_escalate": true}
+{"id": "q09", "question": "Please update email on my profile", "expected_article": "kb_update_email", "must_include": ["Contact details"], "should_escalate": false}
+{"id": "q10", "question": "I got a new SIM, how do I change my number?", "expected_article": "kb_update_email", "must_include": ["OTP"], "should_escalate": false}
+{"id": "q11", "question": "I want to cancel my premium subscription", "expected_article": "kb_cancel", "must_include": ["billing month"], "should_escalate": false}
+{"id": "q12", "question": "How can I close my account?", "expected_article": "kb_cancel", "must_include": ["Close account"], "should_escalate": false}
+{"id": "q13", "question": "Where can I download my bank statement?", "expected_article": "kb_statement", "must_include": ["Statements"], "should_escalate": false}
+{"id": "q14", "question": "I need a PDF statement for my visa application", "expected_article": "kb_statement", "must_include": ["PDF"], "should_escalate": false}
+{"id": "q15", "question": "What is the maximum I can send by UPI in a day?", "expected_article": "kb_transfer_limit", "must_include": ["1 lakh"], "should_escalate": false}
+{"id": "q16", "question": "Can I increase my transfer limit?", "expected_article": "kb_transfer_limit", "must_include": ["Limits"], "should_escalate": false}
+{"id": "q17", "question": "I am not satisfied with your service and want to complain", "expected_article": "kb_complaint", "must_include": ["senior agent"], "should_escalate": true}
+{"id": "q18", "question": "Let me talk to a manager right now", "expected_article": "kb_complaint", "must_include": ["reference number"], "should_escalate": true}
+{"id": "q19", "question": "How much interest does my savings account earn?", "expected_article": "kb_interest", "must_include": ["3%"], "should_escalate": false}
+{"id": "q20", "question": "Is the savings rate better above one lakh?", "expected_article": "kb_interest", "must_include": ["3.5%"], "should_escalate": false}

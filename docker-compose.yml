@@ -1,0 +1,96 @@
+# Local CX data platform: Kafka + Spark (with Iceberg) + Iceberg REST catalog + SeaweedFS (S3 stand-in)
+# Start:  docker compose up -d        Stop: docker compose down        Wipe data: docker compose down -v
+# UIs:    Kafka UI  http://localhost:8081
+#         Jupyter   http://localhost:8888   (Spark + Iceberg notebooks)
+#         Spark UI  http://localhost:4040   (while a job runs)
+#         S3 files  http://localhost:8889/buckets/   (SeaweedFS, S3-compatible)
+
+services:
+  kafka:
+    image: apache/kafka:3.8.0
+    container_name: kafka
+    ports:
+      - "9092:9092"            # for scripts on your laptop
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,INTERNAL://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on: [kafka]
+    ports:
+      - "8081:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+
+  spark-iceberg:
+    image: tabulario/spark-iceberg:latest
+    container_name: spark-iceberg
+    depends_on: [rest, minio, kafka]
+    volumes:
+      - ./labs:/home/iceberg/labs     # your lab code is visible inside the container
+    ports:
+      - "8888:8888"   # Jupyter
+      - "8080:8080"   # Spark master UI
+      - "4040:4040"   # Spark job UI
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: password
+      AWS_REGION: us-east-1
+
+  rest:
+    image: apache/iceberg-rest-fixture:latest
+    container_name: iceberg-rest
+    ports:
+      - "8181:8181"
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: password
+      AWS_REGION: us-east-1
+      CATALOG_WAREHOUSE: s3://warehouse/
+      CATALOG_IO__IMPL: org.apache.iceberg.aws.s3.S3FileIO
+      CATALOG_S3_ENDPOINT: http://minio:9000
+
+  minio:   # S3-compatible object store. Runs SeaweedFS (MinIO's images were withdrawn in 2026);
+            # the service keeps the name "minio" so Spark/Iceberg settings don't change.
+    image: chrislusf/seaweedfs:4.47
+    container_name: minio
+    command: "server -dir=/data -ip=127.0.0.1 -ip.bind=0.0.0.0 -s3 -s3.port=9000 -s3.domainName=minio -master.volumeSizeLimitMB=1024 -volume.max=0 -s3.config=/etc/seaweedfs/s3.json"
+    volumes:
+      - ./s3.json:/etc/seaweedfs/s3.json:ro   # S3 login: admin / password
+    networks:
+      default:
+        aliases: [warehouse.minio]
+    ports:
+      - "9000:9000"   # S3 API
+      - "8889:8888"   # file browser: http://localhost:8889/buckets/
+      - "9333:9333"   # cluster status UI
+
+  mc:   # creates the "warehouse" bucket once the store is up
+    image: amazon/aws-cli:latest
+    container_name: mc
+    depends_on: [minio]
+    environment:
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: password
+      AWS_REGION: us-east-1
+    entrypoint: >
+      /bin/sh -c "
+      until aws --endpoint-url http://minio:9000 s3 ls; do echo '...waiting for S3...' && sleep 2; done;
+      aws --endpoint-url http://minio:9000 s3 mb s3://warehouse || true;
+      echo 'bucket ready';
+      tail -f /dev/null
+      "

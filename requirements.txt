@@ -1,0 +1,8 @@
+# Install on your laptop:  python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+confluent-kafka>=2.5      # Kafka labs
+duckdb>=1.1               # SQL drills
+pytest>=8                 # tests (AI eval lab, CI)
+ruff>=0.6                 # linting in CI
+snowflake-connector-python>=3.12   # optional: Snowflake lab from Python
+boto3>=1.35               # AWS lab
+anthropic>=0.40           # optional: LLM-as-judge in the AI eval lab (needs ANTHROPIC_API_KEY)

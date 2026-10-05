@@ -1,0 +1,7 @@
+.venv*/
+.airflow/
+__pycache__/
+*.duckdb
+*.duckdb.wal
+labs/07_ai_eval/results/
+.env

@@ -1,0 +1,57 @@
+# Lab 08 — CI: lint, unit tests, and an AI quality gate on every push and pull request
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install ruff pytest
+
+      - name: Lint
+        run: ruff check labs/07_ai_eval labs/02_kafka
+
+      - name: Unit tests
+        run: pytest labs/07_ai_eval -q
+
+      - name: AI quality gate (blocks merge if the bot regresses)
+        run: python labs/07_ai_eval/evaluate.py --version v2 --gate "retrieval_hit_rate>=0.9,answer_accuracy>=0.85,escalation_accuracy>=0.95"
+
+      - name: Upload eval results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: labs/07_ai_eval/results/
+
+  validate-dag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Airflow (constraints keep versions consistent)
+        run: |
+          pip install "apache-airflow==2.10.5" \
+            --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.5/constraints-3.11.txt"
+      - name: DAG imports cleanly
+        run: |
+          python - <<'EOF'
+          from airflow.models import DagBag
+          bag = DagBag(dag_folder="labs/05_airflow/dags", include_examples=False)
+          assert not bag.import_errors, bag.import_errors
+          print("DAGs:", list(bag.dags))
+          EOF

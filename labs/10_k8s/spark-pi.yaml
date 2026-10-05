@@ -1,0 +1,26 @@
+# A SparkApplication custom resource: you declare WHAT to run; the Spark Operator's controller
+# creates the driver and executor pods, watches them, and updates .status (the reconcile loop).
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: spark-pi
+  namespace: default
+spec:
+  type: Scala
+  mode: cluster
+  image: spark:3.5.3
+  imagePullPolicy: IfNotPresent
+  mainClass: org.apache.spark.examples.SparkPi
+  mainApplicationFile: local:///opt/spark/examples/jars/spark-examples_2.12-3.5.3.jar
+  arguments: ["1000"]
+  sparkVersion: "3.5.3"
+  restartPolicy:
+    type: Never
+  driver:
+    cores: 1
+    memory: 512m
+    serviceAccount: spark-operator-spark   # check with: kubectl get sa -n default
+  executor:
+    instances: 2
+    cores: 1
+    memory: 512m

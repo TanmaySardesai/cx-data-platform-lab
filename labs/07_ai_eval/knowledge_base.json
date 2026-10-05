@@ -1,0 +1,22 @@
+[
+  {"id": "kb_login", "title": "Can't log in", "keywords": ["login", "log in", "password", "locked", "sign in", "reset"],
+   "answer": "To reset your password, tap 'Forgot password' on the login screen and follow the OTP sent to your registered mobile. After 5 failed attempts your account is locked for 30 minutes."},
+  {"id": "kb_double_charge", "title": "Charged twice", "keywords": ["charged twice", "double", "duplicate charge", "charged two times", "debited twice"],
+   "answer": "Duplicate card charges are usually pending authorisations that drop off within 3 working days. If the second charge is still there after 3 days, raise a dispute from Cards > Transactions."},
+  {"id": "kb_card_block", "title": "Block a lost card", "keywords": ["lost card", "stolen", "block card", "freeze", "lost my card"],
+   "answer": "Block your card instantly from Cards > Manage > Block card. A replacement card is delivered in 5-7 working days free of charge."},
+  {"id": "kb_fraud", "title": "Fraud or unauthorised transaction", "keywords": ["fraud", "unauthorised", "unauthorized", "scam", "didn't make this transaction", "hacked"],
+   "answer": "Block your card immediately and report the transaction as fraud. A fraud specialist will contact you within 24 hours. Never share your OTP with anyone."},
+  {"id": "kb_update_email", "title": "Change email or phone", "keywords": ["update email", "change email", "change phone", "update phone", "change my number"],
+   "answer": "Update your email or phone number from Profile > Contact details. The change is confirmed with an OTP sent to your old number."},
+  {"id": "kb_cancel", "title": "Cancel subscription or close account", "keywords": ["cancel", "close account", "unsubscribe", "terminate", "close my account"],
+   "answer": "You can close your account from Profile > Settings > Close account once your balance is zero. Premium subscriptions can be cancelled anytime and stop at the end of the billing month."},
+  {"id": "kb_statement", "title": "Download a statement", "keywords": ["statement", "download statement", "account statement", "pdf statement", "bank statement"],
+   "answer": "Download statements for the last 24 months from Accounts > Statements. Choose the date range and format (PDF or CSV)."},
+  {"id": "kb_transfer_limit", "title": "Transfer limits", "keywords": ["limit", "transfer limit", "upi limit", "daily limit", "maximum transfer"],
+   "answer": "The default daily transfer limit is 1 lakh rupees for UPI and 10 lakh rupees for NEFT/IMPS. You can change limits from Payments > Limits."},
+  {"id": "kb_complaint", "title": "Raise a complaint", "keywords": ["complaint", "complain", "escalate", "manager", "unhappy", "not satisfied"],
+   "answer": "We're sorry about your experience. Your complaint is being passed to a senior agent who will respond within 2 working days with a reference number."},
+  {"id": "kb_interest", "title": "Savings interest rate", "keywords": ["interest", "interest rate", "savings rate", "how much interest"],
+   "answer": "Savings accounts earn 3% a year on balances up to 1 lakh rupees and 3.5% above that, credited quarterly."}
+]
