@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from bot import KB, VERSIONS  # noqa: E402
+from bot import KB, VERSIONS
 
 HERE = Path(__file__).parent
 ARTICLES = {a["id"]: a for a in KB}

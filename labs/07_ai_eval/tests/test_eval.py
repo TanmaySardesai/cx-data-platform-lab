@@ -4,8 +4,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bot import BotReply, answer_v2  # noqa: E402
-from evaluate import aggregate, check_gate, load_golden, score_item  # noqa: E402
+from bot import BotReply, answer_v2
+from evaluate import aggregate, check_gate, load_golden, score_item
 
 ITEM = {"id": "t1", "question": "q", "expected_article": "kb_fraud",
         "must_include": ["24 hours"], "should_escalate": True}
